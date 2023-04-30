@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>xarray数据读取的学习 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/index.html">
+  <meta name="description" content="xarray数据的读取使用:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xarray数据读取的学习">
+<meta property="og:url" content="http://example.com/2023/05/01/xarray%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E7%9A%84%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="xarray数据的读取使用:">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-30T16:40:26.000Z">
+<meta property="article:modified_time" content="2023-04-30T16:41:05.257Z">
 <meta property="article:author" content="ZhenFan">
 <meta name="twitter:card" content="summary">
   
@@ -165,130 +169,220 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-xarray数据读取的学习" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      xarray数据读取的学习
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2023" class="archive-year">2023</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/01/xarray%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E7%9A%84%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
+
+        
+        <a href="/2023/05/01/xarray%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E7%9A%84%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
   	<time datetime="2023-04-30T16:40:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-01</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/01/xarray%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E7%9A%84%E5%AD%A6%E4%B9%A0/">xarray数据读取的学习</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="xarray数据的读取使用"><a href="#xarray数据的读取使用" class="headerlink" title="xarray数据的读取使用:"></a>xarray数据的读取使用:<span id="more"></span></h2><h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>​		xarray 结合了 Numpy 和 pandas 的最佳数据选择功能，索引灵活，既支持 numpy 风格的下标式索引，也支持 pandas 基于标签的索引。</p>
+<p>​		在使用时可以用下标索引，但是 DataArray 多维的数据结构、索引的高度抽象，(至少我现在是没有完全弄明白的)使用基于位置的下标索引而不是标签索引时，往往因为对 DataArray 数据位置或顺序不熟悉，发生索引错误。(以下几乎均从鲸落社区中习得,大家有兴趣可以自己去看,去学)</p>
+<h4 id="从FNL在分析资料中获取热带地区地表2米气温"><a href="#从FNL在分析资料中获取热带地区地表2米气温" class="headerlink" title="从FNL在分析资料中获取热带地区地表2米气温"></a>从FNL在分析资料中获取热带地区地表2米气温</h4><p>基本要求:</p>
+<ul>
+<li>获取的是地表气温</li>
+<li>热带地区(这里按照南北纬23°之内)</li>
+</ul>
+<h5 id="必要的操作-导包-amp-加载文件"><a href="#必要的操作-导包-amp-加载文件" class="headerlink" title="必要的操作,导包&amp;加载文件"></a>必要的操作,导包&amp;加载文件</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载必须的操作包</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> xarray <span class="keyword">as</span> xr</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 pynio 读取 grib2 文件</span></span><br><span class="line"><span class="comment"># 当然也可以使用cfgrib</span></span><br><span class="line">fnlds=xr.open_dataset(<span class="string">&#x27;/home/mw/input/fnl6384/fnl/fnl_20210101_00_00.grib2&#x27;</span>,engine=<span class="string">&#x27;pynio&#x27;</span>)</span><br><span class="line">fnlds <span class="comment"># 查看数据</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">数据类型:xarray_data</span></span><br><span class="line"><span class="string">xarray.Dataset</span></span><br><span class="line"><span class="string">Dimensions:</span></span><br><span class="line"><span class="string">lat_0: 181,lon_0: 360,lv_ISBL0: 34,lv_AMSL1: 3,lv_HTGL2: 3,lv_PVL3: 2,lv_HTGL4: 2,lv_ISBL5: 31,lv_SIGL6: 4,lv_ISBL7: 22,lv_HTGL8: 7,lv_ISBL9: 21,lv_ISBL10: 29,lv_SPDL11: 2,lv_ISBL12: 24,lv_DBLL13: 4</span></span><br><span class="line"><span class="string">Coordinates: (13)</span></span><br><span class="line"><span class="string">Data variables: (117)</span></span><br><span class="line"><span class="string">Attributes: (0)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+<h5 id="通过索引特定Data-Variable-数据变量-来学习如何使用"><a href="#通过索引特定Data-Variable-数据变量-来学习如何使用" class="headerlink" title="通过索引特定Data Variable(数据变量)来学习如何使用"></a>通过索引特定Data Variable(数据变量)来学习如何使用</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看地面气温的数据</span></span><br><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>]</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">查看的结果:</span></span><br><span class="line"><span class="string">xarray.DataArray&#x27;TMP_P0_L103_GLL0&#x27;lv_HTGL2: 3lat_0: 181lon_0: 360</span></span><br><span class="line"><span class="string">[195480 values with dtype=float32]</span></span><br><span class="line"><span class="string">Coordinates:	</span></span><br><span class="line"><span class="string">lv_HTGL2	(lv_HTGL2)	float32		2.0 80.0 100.0</span></span><br><span class="line"><span class="string">lat_0		(lat_0)		float32		90.0 89.0 88.0 ... -89.0 -90.0</span></span><br><span class="line"><span class="string">lon_0		(lon_0)		float32		0.0 1.0 2.0 ... 357.0 358.0 359.0</span></span><br><span class="line"><span class="string">Attributes:</span></span><br><span class="line"><span class="string">center :	US National Weather Service - NCEP (WMC)</span></span><br><span class="line"><span class="string">production_status :	Operational products</span></span><br><span class="line"><span class="string">long_name :	Temperature</span></span><br><span class="line"><span class="string">units :	K</span></span><br><span class="line"><span class="string">grid_type :	Latitude/longitude</span></span><br><span class="line"><span class="string">parameter_discipline_and_category :	Meteorological products, Temperature</span></span><br><span class="line"><span class="string">parameter_template_discipline_category_number :	[0 0 0 0]</span></span><br><span class="line"><span class="string">level_type :	Specified height level above ground (m)</span></span><br><span class="line"><span class="string">forecast_time :	[0]</span></span><br><span class="line"><span class="string">forecast_time_units :	hours</span></span><br><span class="line"><span class="string">initial_time :	01/01/2021 (00:00)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
 
+<p>​		可以看出来,这个变量字段<strong>由</strong>三个变量字段构成(大多数应该也都是三个变量,因为它都是用来表示空间中的属性&lt;lon,lat&gt;)一个属性变量,两个空间变量.<br>​		在这里,’TMP_P0_L103_GLL0’字段是用来表示一个离地一定高度的温度(注意,这里不是一定海拔高度的那个温度)  内含3个数据  2m  80m  100m</p>
+<h5 id="错误索引方式"><a href="#错误索引方式" class="headerlink" title="错误索引方式"></a>错误索引方式</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 地表2m温度在lv_HTGL2中顺序为第0位，热带温度在lat_0中顺序介于正负67位之间</span></span><br><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>][<span class="number">2</span>,<span class="number">67</span>:-<span class="number">67</span>,:]  <span class="comment"># 高度笔误成写2</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">读取出的结果</span></span><br><span class="line"><span class="string">array([[296.95963, 297.05963, 297.2596 , ..., 294.05963, 294.15964, 295.7596 ],</span></span><br><span class="line"><span class="string">       [297.85962, 299.05963, 298.95963, ..., 295.45963, 295.85962, 297.55963],</span></span><br><span class="line"><span class="string">       [298.65964, 298.65964, 298.35962, ..., 297.45963, 299.15964, 299.95963],</span></span><br><span class="line"><span class="string">       ...,</span></span><br><span class="line"><span class="string">       [293.05963, 292.55963, 292.2596 , ..., 293.45963, 293.35962, 293.05963],</span></span><br><span class="line"><span class="string">       [292.55963, 292.35962, 292.05963, ..., 292.95963, 292.7596 , 292.95963],</span></span><br><span class="line"><span class="string">       [292.55963, 292.15964, 291.85962, ..., 292.95963, 292.95963, 292.85962]],</span></span><br><span class="line"><span class="string">      dtype=float32)</span></span><br><span class="line"><span class="string">Coordinates:</span></span><br><span class="line"><span class="string">lv_HTGL2	()		float32		100.0</span></span><br><span class="line"><span class="string">lat_0		(lat_0)	float32		23.0 22.0 21.0 ... -22.0 -23.0</span></span><br><span class="line"><span class="string">lon_0		(lon_0)	float32		0.0 1.0 2.0 ... 357.0 358.0 359.0</span></span><br><span class="line"><span class="string">Attributes: (11)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>发现读取到的距地温度的高度是100,这可以看出来,他是对第一个变量进行的索引,2正好使100m的那个索引,因此才会出现这种情况.(容易出错)</li>
+<li>这里读取到的数据经纬度是对的,但是并不能直接就读出来,而是通过一定的计算才能得出(这种方式遇到保留好几位小数时候怎么办呢,&lt;只有折磨了&gt;)</li>
+</ol>
+<h5 id="正确的索引方式"><a href="#正确的索引方式" class="headerlink" title="正确的索引方式"></a>正确的索引方式</h5><p>方法:</p>
+<ol>
+<li>小心观察,计算好位置:									                                 	推荐指数:+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>][<span class="number">0</span>,<span class="number">67</span>:-<span class="number">67</span>,:]</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>通过.isel()接口&lt;这个也是位置索引,因此也是需要计算的,容易出错&gt;		推荐指数:+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>].isel(lv_HTGL2=<span class="number">0</span>,lat_0=<span class="built_in">slice</span>(<span class="number">67</span>,-<span class="number">67</span>),lon_0=<span class="built_in">slice</span>(<span class="number">0</span>,<span class="number">360</span>))  <span class="comment"># 借助slice切片函数索引区域数据</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">读取到的数据:</span></span><br><span class="line"><span class="string">xarray.DataArray&#x27;TMP_P0_L103_GLL0&#x27;lat_0: 47lon_0: 360</span></span><br><span class="line"><span class="string">array([[293.8734 , 294.5534 , 294.47342, ..., 292.22342, 292.1734 , 293.60342],</span></span><br><span class="line"><span class="string">       [296.0534 , 296.3034 , 295.8334 , ..., 293.4234 , 294.7134 , 297.07343],</span></span><br><span class="line"><span class="string">       [296.31342, 295.3334 , 292.9334 , ..., 297.6234 , 297.8734 , 299.2434 ],</span></span><br><span class="line"><span class="string">       ...,</span></span><br><span class="line"><span class="string">       [294.0234 , 293.53342, 293.32343, ..., 294.50342, 294.3734 , 294.0534 ],</span></span><br><span class="line"><span class="string">       [293.6234 , 293.50342, 293.16342, ..., 294.1234 , 293.88342, 293.9834 ],</span></span><br><span class="line"><span class="string">       [293.69342, 293.31342, 293.0534 , ..., 294.13342, 294.04343, 293.9234 ]],</span></span><br><span class="line"><span class="string">      dtype=float32)</span></span><br><span class="line"><span class="string">Coordinates:</span></span><br><span class="line"><span class="string">lv_HTGL2		()	float32		2.0</span></span><br><span class="line"><span class="string">lat_0		(lat_0)	float32		23.0 22.0 21.0 ... -22.0 -23.0</span></span><br><span class="line"><span class="string">lon_0		(lon_0)	float32		0.0 1.0 2.0 ... 357.0 358.0 359.0</span></span><br><span class="line"><span class="string">Attributes: (11)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>一个安全易懂的标签索引示例：.loc[]												   推荐指数:++</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接.loc[]使用标签索引，代码更少</span></span><br><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>].loc[<span class="number">2</span>,<span class="number">23</span>+<span class="number">26</span>/<span class="number">60</span>:-<span class="number">23</span>-<span class="number">26</span>/<span class="number">60</span>,:]</span><br><span class="line"><span class="comment"># 直接标签索引,这样所见即所得,你看到的是2m高度的就是2m高度的,经纬度从a-b就是选中的从a-b</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">读取到的数据:</span></span><br><span class="line"><span class="string">xarray.DataArray&#x27;TMP_P0_L103_GLL0&#x27;lat_0: 47lon_0: 360</span></span><br><span class="line"><span class="string">array([[293.8734 , 294.5534 , 294.47342, ..., 292.22342, 292.1734 , 293.60342],</span></span><br><span class="line"><span class="string">       [296.0534 , 296.3034 , 295.8334 , ..., 293.4234 , 294.7134 , 297.07343],</span></span><br><span class="line"><span class="string">       [296.31342, 295.3334 , 292.9334 , ..., 297.6234 , 297.8734 , 299.2434 ],</span></span><br><span class="line"><span class="string">       ...,</span></span><br><span class="line"><span class="string">       [294.0234 , 293.53342, 293.32343, ..., 294.50342, 294.3734 , 294.0534 ],</span></span><br><span class="line"><span class="string">       [293.6234 , 293.50342, 293.16342, ..., 294.1234 , 293.88342, 293.9834 ],</span></span><br><span class="line"><span class="string">       [293.69342, 293.31342, 293.0534 , ..., 294.13342, 294.04343, 293.9234 ]],</span></span><br><span class="line"><span class="string">      dtype=float32)</span></span><br><span class="line"><span class="string">Coordinates:</span></span><br><span class="line"><span class="string">lv_HTGL2		()	float32		2.0</span></span><br><span class="line"><span class="string">lat_0		(lat_0)	float32		23.0 22.0 21.0 ... -22.0 -23.0</span></span><br><span class="line"><span class="string">lon_0		(lon_0)	float32		0.0 1.0 2.0 ... 357.0 358.0 359.0</span></span><br><span class="line"><span class="string">Attributes: (11)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>另一个安全易懂的标签索引示例：.sel()											  推荐指数:++++</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>].sel(lv_HTGL2=<span class="number">2</span>,lat_0=<span class="built_in">slice</span>(<span class="number">23</span>+<span class="number">23</span>/<span class="number">60</span>,-<span class="number">23</span>-<span class="number">23</span>/<span class="number">60</span>),lon_0=<span class="built_in">slice</span>(<span class="number">0</span>,<span class="number">360</span>))</span><br><span class="line"><span class="comment"># sel() 加上 slice() 可以更好的选取出一定范围内的数据</span></span><br><span class="line"><span class="comment"># slice 其实是一种切片slice(start, end, step)  </span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">读取到的数据:</span></span><br><span class="line"><span class="string">xarray.DataArray&#x27;TMP_P0_L103_GLL0&#x27;lat_0: 47lon_0: 360</span></span><br><span class="line"><span class="string">array([[293.8734 , 294.5534 , 294.47342, ..., 292.22342, 292.1734 , 293.60342],</span></span><br><span class="line"><span class="string">       [296.0534 , 296.3034 , 295.8334 , ..., 293.4234 , 294.7134 , 297.07343],</span></span><br><span class="line"><span class="string">       [296.31342, 295.3334 , 292.9334 , ..., 297.6234 , 297.8734 , 299.2434 ],</span></span><br><span class="line"><span class="string">       ...,</span></span><br><span class="line"><span class="string">       [294.0234 , 293.53342, 293.32343, ..., 294.50342, 294.3734 , 294.0534 ],</span></span><br><span class="line"><span class="string">       [293.6234 , 293.50342, 293.16342, ..., 294.1234 , 293.88342, 293.9834 ],</span></span><br><span class="line"><span class="string">       [293.69342, 293.31342, 293.0534 , ..., 294.13342, 294.04343, 293.9234 ]],</span></span><br><span class="line"><span class="string">      dtype=float32)</span></span><br><span class="line"><span class="string">Coordinates:</span></span><br><span class="line"><span class="string">lv_HTGL2		()	float32		2.0</span></span><br><span class="line"><span class="string">lat_0		(lat_0)	float32		23.0 22.0 21.0 ... -22.0 -23.0</span></span><br><span class="line"><span class="string">lon_0		(lon_0)	float32		0.0 1.0 2.0 ... 357.0 358.0 359.0</span></span><br><span class="line"><span class="string">Attributes: (11)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>​      给他4+的原因不止是因为它是标签索引,不容易出错,更因为它具有的method参数(根据 method 参数找到最近的格点)<br>​       当你需要索引的标签数值是浮点数或并不存在于维度坐标里面，你可以借助 .sel() 的 method 参数来查找最近的格点<br>​       method取值:’nearest’（最近原则）、’pad&#x2F;ffill’（前近原则）、 backfill&#x2F;bfill（后近原则）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不加 method 参数，下面会出错</span></span><br><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>].sel(lv_HTGL2=<span class="number">2.0</span>,lat_0=<span class="number">90</span>,lon_0=<span class="number">180.5</span>)</span><br><span class="line"><span class="comment"># 加 method 参数，会根据参数找到最近的格点</span></span><br><span class="line">fnlds[<span class="string">&#x27;TMP_P0_L103_GLL0&#x27;</span>].sel(lv_HTGL2=<span class="number">2.0</span>,lat_0=<span class="number">90</span>,lon_0=<span class="number">180.5</span>,method=<span class="string">&#x27;nearest&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">xarray.DataArray&#x27;TMP_P0_L103_GLL0&#x27;</span></span><br><span class="line"><span class="string">array(256.273407)</span></span><br><span class="line"><span class="string">Coordinates:</span></span><br><span class="line"><span class="string">lv_HTGL2	()	float32		2.0</span></span><br><span class="line"><span class="string">lat_0		()	float32		90.0</span></span><br><span class="line"><span class="string">lon_0		()	float32		181.0</span></span><br><span class="line"><span class="string">Attributes: (11)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 关于三个参数讲解的例子:</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">df = pd.DataFrame(&#123;</span><br><span class="line">    <span class="string">&#x27;col1&#x27;</span>: [<span class="number">1</span>, <span class="number">2</span>, NaN, <span class="number">3</span>],</span><br><span class="line">    <span class="string">&#x27;col2&#x27;</span>: [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, NaN]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">df.fillna(method=<span class="string">&#x27;nearest&#x27;</span>)</span><br><span class="line"><span class="comment">#    col1  col2</span></span><br><span class="line"><span class="comment"># 0     1     4 </span></span><br><span class="line"><span class="comment"># 1     2     5 </span></span><br><span class="line"><span class="comment"># 2     2     6</span></span><br><span class="line"><span class="comment"># 3     3     5</span></span><br><span class="line"><span class="comment"># nearest 方法会选取离你选取点最近的点数据</span></span><br><span class="line"><span class="comment"># (如果你选取的那一点两侧都有点,如果他俩距离你选取的那一点距离相同,那么他就会遵循前近原则</span></span><br><span class="line">df.fillna(method=<span class="string">&#x27;pad&#x27;</span>)  </span><br><span class="line"><span class="comment">#    col1  col2 </span></span><br><span class="line"><span class="comment"># 0     1     4</span></span><br><span class="line"><span class="comment"># 1     2     5 </span></span><br><span class="line"><span class="comment"># 2     2     6 </span></span><br><span class="line"><span class="comment"># 3     3     6</span></span><br><span class="line"><span class="comment"># 前近原则就是简单的找前方最近的(如果他前面都是nan则仍会保持nan的状态)</span></span><br><span class="line">df.fillna(method=<span class="string">&#x27;backfill&#x27;</span>)</span><br><span class="line"><span class="comment">#    col1  col2</span></span><br><span class="line"><span class="comment"># 0     1     4 </span></span><br><span class="line"><span class="comment"># 1     2     5  </span></span><br><span class="line"><span class="comment"># 2     3     6</span></span><br><span class="line"><span class="comment"># 3     3   NaN</span></span><br><span class="line"><span class="comment"># 后近原则就是简单的找后方最近的(如果他后面都是nan则仍会保持nan的状态)</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="学习实践学习-再实践"><a href="#学习实践学习-再实践" class="headerlink" title="学习实践学习~再实践"></a>学习<del>实践</del>学习~再实践</h1><h2 id="2023年4月30日22-32-45"><a href="#2023年4月30日22-32-45" class="headerlink" title="2023年4月30日22:32:45"></a>2023年4月30日22:32:45</h2>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/ali_pay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wx_pay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://fz010619.github.io/023/05/01/xarray%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E7%9A%84%E5%AD%A6%E4%B9%A0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/04/30/%E5%B0%9D%E8%AF%95%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%A0%87%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2023-04-29T17:10:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-04-30</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2023/04/30/%E5%B0%9D%E8%AF%95%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%A0%87%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我的第一篇博客文章</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/04/30/%E5%B0%9D%E8%AF%95%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%A0%87%E9%A2%98/">我的第一篇博客文章</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#xarray%E6%95%B0%E6%8D%AE%E7%9A%84%E8%AF%BB%E5%8F%96%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">xarray数据的读取使用:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-number">1.1.</span> <span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8EFNL%E5%9C%A8%E5%88%86%E6%9E%90%E8%B5%84%E6%96%99%E4%B8%AD%E8%8E%B7%E5%8F%96%E7%83%AD%E5%B8%A6%E5%9C%B0%E5%8C%BA%E5%9C%B0%E8%A1%A82%E7%B1%B3%E6%B0%94%E6%B8%A9"><span class="toc-number">1.1.1.</span> <span class="toc-text">从FNL在分析资料中获取热带地区地表2米气温</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BF%85%E8%A6%81%E7%9A%84%E6%93%8D%E4%BD%9C-%E5%AF%BC%E5%8C%85-amp-%E5%8A%A0%E8%BD%BD%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">必要的操作,导包&amp;加载文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E7%B4%A2%E5%BC%95%E7%89%B9%E5%AE%9AData-Variable-%E6%95%B0%E6%8D%AE%E5%8F%98%E9%87%8F-%E6%9D%A5%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">通过索引特定Data Variable(数据变量)来学习如何使用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%B4%A2%E5%BC%95%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">错误索引方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84%E7%B4%A2%E5%BC%95%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">正确的索引方式</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E5%AD%A6%E4%B9%A0-%E5%86%8D%E5%AE%9E%E8%B7%B5"><span class="toc-number"></span> <span class="toc-text">学习实践学习~再实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2023%E5%B9%B44%E6%9C%8830%E6%97%A522-32-45"><span class="toc-number">1.</span> <span class="toc-text">2023年4月30日22:32:45</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/04/26/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%B0%9D%E8%AF%95/" class="archive-article-date">
-  	<time datetime="2023-04-26T09:30:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-04-26</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/04/26/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%B0%9D%E8%AF%95/">我的第一次尝试</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/04/26/hello-world/" class="archive-article-date">
-  	<time datetime="2023-04-26T09:25:42.913Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-04-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/04/26/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -311,8 +405,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
